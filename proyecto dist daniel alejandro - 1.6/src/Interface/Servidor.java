@@ -4,18 +4,79 @@
  * and open the template in the editor.
  */
 package Interface;
-
+import cliente.cliente;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import servidor.servidor;
 /**
  *
- * @author alc_d
+ * @author JASO VAIO
  */
-public class Servidor extends javax.swing.JPanel {
+public class Servidor extends javax.swing.JFrame {
 
     /**
-     * Creates new form Servidor
+     * Creates new form Inicio
      */
+    private int puerto;
+    private servidor server;
+    
+    
+    private List<cliente> serversConnectedTo  = new ArrayList<cliente>();
+   
+    public void fill_peers(){
+        this.peers.removeAllItems();
+        for (int i = 55000; i < 55100; i++) {
+            
+            try {
+                new ServerSocket(i).close();
+            } catch (IOException ex) {
+                if (i!= this.getServer().getPuerto()){
+                    this.peers.addItem(String.valueOf(i));
+                }
+            }
+             catch (Exception e) {
+                System.out.println("Excepcion: " + e.getMessage());
+            }
+        }
+        puerto = server.getPuerto();
+        this.setTitle("Servidor "+Integer.toString(puerto));
+    
+    }
+    
+    public void inicializar(){
+        jerror.setVisible(false);
+    }
+    
     public Servidor() {
+        
+        this.setServer(new servidor(55001));
+        this.getServer().start();
         initComponents();
+        this.fill_peers();
+        Servidor aux = this;
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {     
+                System.out.println("prueba");    
+                for (int i = 0; i < serversConnectedTo.size(); i++) {
+                    serversConnectedTo.get(i).logout();
+                }
+                try {
+                    
+                    aux.getServer().getServer().close();
+                } catch (IOException ex) {
+                    System.out.println("Excepcion: " + ex.getMessage());
+                    Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                System.exit(0);
+            }
+        });
+        jerror.setVisible(false);
     }
 
     /**
@@ -27,25 +88,13 @@ public class Servidor extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        reload = new javax.swing.JButton();
-        connect = new javax.swing.JButton();
         peers = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
+        connect = new javax.swing.JButton();
+        reload = new javax.swing.JButton();
         jerror = new javax.swing.JLabel();
 
-        reload.setText("Reload");
-        reload.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                reloadActionPerformed(evt);
-            }
-        });
-
-        connect.setText("Conectar");
-        connect.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                connectActionPerformed(evt);
-            }
-        });
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         peers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -55,69 +104,88 @@ public class Servidor extends javax.swing.JPanel {
 
         jLabel1.setText("Seleccione peer");
 
+        connect.setText("Conectar");
+        connect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                connectActionPerformed(evt);
+            }
+        });
+
+        reload.setText("Reload");
+        reload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reloadActionPerformed(evt);
+            }
+        });
+
         jerror.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jerror.setForeground(new java.awt.Color(255, 0, 0));
         jerror.setText("No es posible realizar la conexion");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(peers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                .addComponent(connect)
-                .addGap(39, 39, 39)
-                .addComponent(reload)
-                .addGap(49, 49, 49))
             .addGroup(layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addComponent(jerror, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(23, 23, 23)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jerror, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(peers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(63, 63, 63)
+                        .addComponent(connect)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                        .addComponent(reload)
+                        .addGap(25, 25, 25))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(49, 49, 49)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(reload)
-                    .addComponent(connect)
-                    .addComponent(peers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
                 .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(peers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(connect)
+                    .addComponent(reload))
+                .addGap(45, 45, 45)
                 .addComponent(jerror, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(174, Short.MAX_VALUE))
         );
+
+        pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void reloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reloadActionPerformed
-        // TODO add your handling code here:
-        //this.fill_peers();
-    }//GEN-LAST:event_reloadActionPerformed
-
-    private void connectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectActionPerformed
-        // TODO add your handling code here:
-        /*try {
-            cliente clienteAux =  new cliente(Integer.parseInt(this.peers.getSelectedItem().toString()));
-            this.serversConnectedTo.add(clienteAux);
-            clienteAux.run();
-            inicializar();
-        } catch (Exception e) {
-            System.out.println("No es posible conectar");
-            jerror.setVisible(true);
-        }*/
-
-    }//GEN-LAST:event_connectActionPerformed
 
     private void peersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peersActionPerformed
         // TODO add your handling code here:
-
+        
     }//GEN-LAST:event_peersActionPerformed
 
-    
+    private void connectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectActionPerformed
+        // TODO add your handling code here:
+        try {
+            cliente clienteAux =  new cliente(Integer.parseInt(this.peers.getSelectedItem().toString()));
+        this.serversConnectedTo.add(clienteAux);
+        clienteAux.run();
+        inicializar();
+        } catch (Exception e) {
+            System.out.println("No es posible conectar");
+            jerror.setVisible(true);
+        }
+        
+    }//GEN-LAST:event_connectActionPerformed
+
+    private void reloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reloadActionPerformed
+        // TODO add your handling code here:
+         this.fill_peers();
+    }//GEN-LAST:event_reloadActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -132,20 +200,21 @@ public class Servidor extends javax.swing.JPanel {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Cliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Servidor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Cliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Servidor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Cliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Servidor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Cliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Servidor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Cliente().setVisible(true);
+                new Servidor().setVisible(true);
             }
         });
     }
@@ -157,4 +226,32 @@ public class Servidor extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> peers;
     private javax.swing.JButton reload;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * @return the server
+     */
+    public servidor getServer() {
+        return server;
+    }
+
+    /**
+     * @param server the server to set
+     */
+    public void setServer(servidor server) {
+        this.server = server;
+    }
+
+    /**
+     * @return the serversConnectedTo
+     */
+    public List<cliente> getServersConnectedTo() {
+        return serversConnectedTo;
+    }
+
+    /**
+     * @param serversConnectedTo the serversConnectedTo to set
+     */
+    public void setServersConnectedTo(List<cliente> serversConnectedTo) {
+        this.serversConnectedTo = serversConnectedTo;
+    }
 }
