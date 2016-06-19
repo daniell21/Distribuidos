@@ -106,7 +106,7 @@ public class cliente extends Thread{
         super.run(); //To change body of generated methods, choose Tools | Templates.
         try {
             this.listenServer();
-            System.out.println("Mando a listar los vecinos");
+            //System.out.println("Mando a listar los vecinos");
            // this.logout();
         } 
         catch (Exception e) {

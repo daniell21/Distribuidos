@@ -5,8 +5,12 @@
  */
 package Interface;
 
+import cliente.cliente;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.Iterator;
+import java.util.List;
+import javax.swing.DefaultListModel;
 
 /**
  *
@@ -14,12 +18,16 @@ import java.net.ServerSocket;
  */
 public class Cliente extends javax.swing.JFrame {
 
+     private DefaultListModel listModel ;
     /**
      * Creates new form Cliente
      */
     public Cliente() {
         initComponents();
         this.fill_peers();
+        this.listModel =  new DefaultListModel();
+        this.file_list.setModel(listModel);
+        
     }
 
     
@@ -50,14 +58,12 @@ public class Cliente extends javax.swing.JFrame {
 
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jTableRemote = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         peers = new javax.swing.JComboBox<>();
         connect = new javax.swing.JButton();
         reload = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        server_name = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -68,35 +74,14 @@ public class Cliente extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        file_list = new javax.swing.JList<>();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jScrollPane2.setViewportView(jTextArea1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jTableRemote.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {""},
-                {""},
-                {""},
-                {""},
-                {""},
-                {null}
-            },
-            new String [] {
-                "Archivos en la Red"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jScrollPane4.setViewportView(jTableRemote);
 
         jLabel1.setText("Seleccione Frontal");
 
@@ -122,7 +107,7 @@ public class Cliente extends javax.swing.JFrame {
 
         jLabel2.setText("Conectado a:");
 
-        jLabel3.setText("jLabel3");
+        server_name.setText("jLabel3");
 
         jTextArea2.setColumns(20);
         jTextArea2.setRows(5);
@@ -153,6 +138,8 @@ public class Cliente extends javax.swing.JFrame {
 
         jLabel7.setText(".txt");
 
+        jScrollPane1.setViewportView(file_list);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -172,7 +159,7 @@ public class Cliente extends javax.swing.JFrame {
                             .addComponent(jLabel2))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(server_name, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(peers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(48, 48, 48)
@@ -192,10 +179,11 @@ public class Cliente extends javax.swing.JFrame {
                         .addGap(44, 44, 44)
                         .addComponent(jLabel5)
                         .addGap(178, 178, 178)
-                        .addComponent(jLabel6))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(67, 67, 67)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel6)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -210,10 +198,10 @@ public class Cliente extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel3))
-                .addGap(29, 29, 29)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(server_name))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(13, 13, 13)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jLabel6))
@@ -240,16 +228,20 @@ public class Cliente extends javax.swing.JFrame {
 
     private void connectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectActionPerformed
         // TODO add your handling code here:
-        /*try {
+        try {
             cliente clienteAux =  new cliente(Integer.parseInt(this.peers.getSelectedItem().toString()));
-            this.serversConnectedTo.add(clienteAux);
-            this.servers.addItem(this.peers.getSelectedItem().toString());
             clienteAux.run();
-            inicializar();
+            this.server_name.setText(this.peers.getSelectedItem().toString());
+            List response = clienteAux.listFiles();
+            Iterator iterator = response.iterator();
+            while (iterator.hasNext()){
+                 String file_name = (String)iterator.next();
+                 this.listModel.addElement(file_name);
+            }
+            
         } catch (Exception e) {
             System.out.println("No es posible conectar");
-            jerror.setVisible(true);
-        }*/
+        }
 
     }//GEN-LAST:event_connectActionPerformed
 
@@ -305,24 +297,24 @@ public class Cliente extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton connect;
+    private javax.swing.JList<String> file_list;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JTable jTableRemote;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextArea3;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JComboBox<String> peers;
     private javax.swing.JButton reload;
+    private javax.swing.JLabel server_name;
     // End of variables declaration//GEN-END:variables
 }
