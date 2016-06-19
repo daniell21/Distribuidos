@@ -256,7 +256,7 @@ public class Cliente extends javax.swing.JFrame {
     private void reloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reloadActionPerformed
         // TODO add your handling code here:
         //jerror.setVisible(false);
-        //this.fill_peers();
+        this.fill_peers();
 
     }//GEN-LAST:event_reloadActionPerformed
 
