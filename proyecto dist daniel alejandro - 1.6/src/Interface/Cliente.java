@@ -5,6 +5,9 @@
  */
 package Interface;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+
 /**
  *
  * @author alc_d
@@ -16,8 +19,26 @@ public class Cliente extends javax.swing.JFrame {
      */
     public Cliente() {
         initComponents();
+        this.fill_peers();
     }
 
+    
+    public void fill_peers(){
+        this.peers.removeAllItems();
+        for (int i = 55000; i < 55100; i++) {
+            
+            try {
+                new ServerSocket(i).close();
+            } catch (IOException ex) {
+                this.peers.addItem(String.valueOf(i));              
+            }
+             catch (Exception e) {
+                System.out.println("Excepcion: " + e.getMessage());
+            }
+        }
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
