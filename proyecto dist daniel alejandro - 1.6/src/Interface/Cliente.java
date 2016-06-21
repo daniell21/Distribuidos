@@ -47,8 +47,6 @@ public class Cliente extends javax.swing.JFrame {
     }
     
     
-    
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -231,6 +229,7 @@ public class Cliente extends javax.swing.JFrame {
     private void connectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectActionPerformed
         // TODO add your handling code here:
         try {
+            this.listModel.clear();
             cliente clienteAux =  new cliente(Integer.parseInt(this.peers.getSelectedItem().toString()));
             clienteAux.run();
             this.server_name.setText(this.peers.getSelectedItem().toString());

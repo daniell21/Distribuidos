@@ -30,6 +30,29 @@ public class cliente extends Thread{
         this.puerto = puerto;
     }
     
+   public void connect(){
+        
+        try {    
+            InetAddress addr = InetAddress.getByName("127.0.0.1"); //Se crea un objeto de tipo InetAddress
+            this.setSocket(new Socket(addr,this.getPuerto()));
+            String answer = "";
+            System.out.println("Conectado con el server: " +  String.valueOf(this.getPuerto()));
+            this.setEntrada(new DataInputStream(this.getSocket().getInputStream()));
+            answer = this.getEntrada().readUTF();
+            if (answer.equalsIgnoreCase("who are you? server/client")){
+                this.whoAmI();
+            }
+        }
+        catch (UnknownHostException ex) {
+            Logger.getLogger(cliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        catch (Exception e) {
+            System.out.println("Excepcion: " + e.getMessage());
+        }
+    
+    }
+    
     public void logout(){
    
         try {
@@ -46,16 +69,31 @@ public class cliente extends Thread{
         }
     }
     
+    public void whoAmI(){
+   
+        try {
+            this.setSalida(new DataOutputStream(this.getSocket().getOutputStream()));
+            this.getSalida().writeUTF("client");
+        } 
+        catch (IOException ex) {
+            System.out.println("Excepcion: " + ex.getMessage());
+            //Logger.getLogger(cliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (Exception e) {
+            System.out.println("Excepcion: " + e.getMessage());
+        }
+    }
     
     
     public List<String> listFiles(){
+        
+        this.connect();
         List response = new ArrayList();
         try {
             this.setSalida(new DataOutputStream(this.getSocket().getOutputStream()));
-            this.getSalida().writeUTF("listFiles");
+            this.getSalida().writeUTF("listAllFiles");
             this.setEntrada(new DataInputStream(this.getSocket().getInputStream()));
             String answer = this.getEntrada().readUTF();
-            //System.out.println("answer " + answer );
             while(!answer.equalsIgnoreCase("done")){
                 System.out.println("Nombre de Archivo: " + answer );
                 response.add(answer);
@@ -72,31 +110,8 @@ public class cliente extends Thread{
         catch (Exception e) {
             System.out.println("Excepcion: " + e.getMessage());
         }
+        this.logout();
         return response;
-    }
-    
-    public void listenServer(){
-
-        try {    
-            InetAddress addr = InetAddress.getByName("127.0.0.1"); //Se crea un objeto de tipo InetAddress
-            this.setSocket(new Socket(addr,this.getPuerto()));
-            String answer = "";
-            while(!answer.equalsIgnoreCase("hello")){
-                System.out.println("Conectado con el server: " +  String.valueOf(this.getPuerto()));
-                this.setEntrada(new DataInputStream(this.getSocket().getInputStream()));
-                answer = this.getEntrada().readUTF();
-                System.out.println(answer);
-                
-            }
-           // this.listFiles();
-        }
-        catch (UnknownHostException ex) {
-            Logger.getLogger(cliente.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        catch (Exception e) {
-            System.out.println("Excepcion: " + e.getMessage());
-        }
     }
     
     
@@ -105,9 +120,8 @@ public class cliente extends Thread{
     public void run() {
         super.run(); //To change body of generated methods, choose Tools | Templates.
         try {
-            this.listenServer();
-            //System.out.println("Mando a listar los vecinos");
-           // this.logout();
+            this.listFiles();
+         
         } 
         catch (Exception e) {
             System.out.println("Excepcion: " + e.getMessage());

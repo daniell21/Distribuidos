@@ -36,25 +36,7 @@ public class Comando extends Thread{
     @Override
     public void run() {
         super.run(); //To change body of generated methods, choose Tools | Templates.
-        //this.sayHello();
         this.listenCommand();
-    }
-    
-    
-    public void sayHello(){
-   
-        try {
-            this.setOutput(new DataOutputStream(this.getCliente().getOutputStream()));
-            this.getOutput().writeUTF("hello");
-        } 
-        catch (IOException ex) {
-            System.out.println("Excepcion: " + ex.getMessage());
-            Logger.getLogger(Comando.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        catch (Exception e) {
-            System.out.println("Excepcion: " + e.getMessage());
-        }
     }
     
     public void listenCommand(){
@@ -67,6 +49,9 @@ public class Comando extends Thread{
                 System.out.println("Cliente manda a ejecutar " + command);
                 if(command.equalsIgnoreCase("listFiles")){
                     this.listFiles();
+                }
+                 if(command.equalsIgnoreCase("listAllFiles")){
+                    this.listAllFiles();
                 }
                 
             }
@@ -104,6 +89,33 @@ public class Comando extends Thread{
             System.out.println("Excepcion: " + e.getMessage());
         }
     }
+    
+    public void listAllFiles() throws IOException{
+        
+        for (int i = 55000; i < 55100; i++) {
+            try {
+                new ServerSocket(i).close();
+            } catch (IOException ex) {
+               
+                Archivo archivos = new Archivo(Integer.toString(i));
+                List<String> nombres = archivos.listarArchivos();
+                Iterator iterator = nombres.iterator();
+                this.setOutput(new DataOutputStream(this.getCliente().getOutputStream()));
+                while(iterator.hasNext()){
+                    this.getOutput().writeUTF((String) iterator.next());
+                }
+            }
+             catch (Exception e) {
+                System.out.println("Excepcion: " + e.getMessage());
+            }
+        }
+        this.getOutput().writeUTF("done");
+       
+    }
+    
+    
+    
+    
     
     /**
      * @return the cliente

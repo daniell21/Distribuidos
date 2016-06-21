@@ -74,7 +74,7 @@ public class cliente extends Thread{
    
         try {
             this.setSalida(new DataOutputStream(this.getSocket().getOutputStream()));
-            this.getSalida().writeUTF("client");
+            this.getSalida().writeUTF("server");
         } 
         catch (IOException ex) {
             System.out.println("Excepcion: " + ex.getMessage());
@@ -122,8 +122,7 @@ public class cliente extends Thread{
     public void run() {
         super.run(); //To change body of generated methods, choose Tools | Templates.
         try {
-           this.listFiles();
-           
+            this.listFiles();
         } 
         catch (Exception e) {
             System.out.println("Excepcion: " + e.getMessage());
