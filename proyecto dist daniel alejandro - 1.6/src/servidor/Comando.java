@@ -59,6 +59,11 @@ public class Comando extends Thread{
                     this.fileContents(parts[1]);
                 }
                 
+                 if(command.contains("update_file_content:")){
+                    String[] parts = command.split(":");
+                    this.updateFileContents(parts[1], parts[2]);
+                }
+                
             }
         } 
         catch (IOException ex) {
@@ -97,6 +102,10 @@ public class Comando extends Thread{
     }
     
     
+    public void updateFileContents(String fileName, String fileContent){
+        Archivo archivos = new Archivo(Integer.toString(this.getCliente().getLocalPort()));
+        String response = archivos.UpdatefileContents(fileName, fileContent);
+    }
     
     
     public void listFiles(){
@@ -144,9 +153,6 @@ public class Comando extends Thread{
         this.getOutput().writeUTF("done");
        
     }
-    
-    
-    
     
     
     /**

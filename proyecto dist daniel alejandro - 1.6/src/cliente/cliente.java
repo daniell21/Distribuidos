@@ -115,6 +115,31 @@ public class cliente extends Thread{
     }
     
     
+    public String updateFileContents(String fileName, String content){
+        this.connect();
+        String response = "";
+        try {
+            this.setSalida(new DataOutputStream(this.getSocket().getOutputStream()));
+            this.getSalida().writeUTF("update_file_content:" + fileName +":"+content);
+            
+        } 
+        catch (IOException ex) {
+            System.out.println("Excepcion: " + ex.getMessage());
+            Logger.getLogger(cliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (Exception e) {
+            System.out.println("Excepcion: " + e.getMessage());
+        }
+        finally{
+            this.logout();
+            return response;
+        }
+    }
+    
+    
+    
+    
+    
     public List<String> listFiles(){
         
         this.connect();

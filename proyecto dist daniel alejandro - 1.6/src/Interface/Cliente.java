@@ -67,7 +67,7 @@ public class Cliente extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         file_content = new javax.swing.JTextArea();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jTextArea3 = new javax.swing.JTextArea();
+        file_content_edit = new javax.swing.JTextArea();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -76,6 +76,7 @@ public class Cliente extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         file_list = new javax.swing.JList<>();
+        update_file = new javax.swing.JButton();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -113,9 +114,9 @@ public class Cliente extends javax.swing.JFrame {
         file_content.setRows(5);
         jScrollPane3.setViewportView(file_content);
 
-        jTextArea3.setColumns(20);
-        jTextArea3.setRows(5);
-        jScrollPane5.setViewportView(jTextArea3);
+        file_content_edit.setColumns(20);
+        file_content_edit.setRows(5);
+        jScrollPane5.setViewportView(file_content_edit);
 
         jLabel4.setText("Crear Archivo");
 
@@ -145,6 +146,13 @@ public class Cliente extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(file_list);
 
+        update_file.setText("Modificar");
+        update_file.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                update_fileActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -172,15 +180,6 @@ public class Cliente extends javax.swing.JFrame {
                                 .addGap(43, 43, 43)
                                 .addComponent(reload))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(67, 67, 67)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel7)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(44, 44, 44)
                         .addComponent(jLabel5)
                         .addGap(178, 178, 178)
@@ -189,6 +188,20 @@ public class Cliente extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(58, 58, 58)
+                .addComponent(jLabel4)
+                .addGap(18, 18, 18)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel7)
+                .addGap(34, 34, 34)
+                .addComponent(jButton1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(87, 87, 87)
+                .addComponent(update_file)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -214,13 +227,15 @@ public class Cliente extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(update_file)
+                .addGap(17, 17, 17)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1)
-                    .addComponent(jLabel7))
-                .addContainerGap(37, Short.MAX_VALUE))
+                    .addComponent(jLabel7)
+                    .addComponent(jButton1))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -272,7 +287,16 @@ public class Cliente extends javax.swing.JFrame {
         cliente clienteAux =  new cliente(Integer.parseInt(this.peers.getSelectedItem().toString()));
         String content = clienteAux.fileContents(this.file_list.getSelectedValue());
         this.file_content.setText(content);
+        this.file_content_edit.setText(content);
     }//GEN-LAST:event_file_listValueChanged
+
+    private void update_fileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_update_fileActionPerformed
+        // TODO add your handling code here:
+        
+        cliente clienteAux =  new cliente(Integer.parseInt(this.peers.getSelectedItem().toString()));
+        clienteAux.updateFileContents(this.file_list.getSelectedValue(),  this.file_content_edit.getText());
+       
+    }//GEN-LAST:event_update_fileActionPerformed
 
     /**
      * @param args the command line arguments
@@ -312,6 +336,7 @@ public class Cliente extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton connect;
     private javax.swing.JTextArea file_content;
+    private javax.swing.JTextArea file_content_edit;
     private javax.swing.JList<String> file_list;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
@@ -325,10 +350,10 @@ public class Cliente extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea3;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JComboBox<String> peers;
     private javax.swing.JButton reload;
     private javax.swing.JLabel server_name;
+    private javax.swing.JButton update_file;
     // End of variables declaration//GEN-END:variables
 }
