@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package Interface;
-import cliente.cliente;
+import servidor.cliente;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
@@ -27,6 +27,7 @@ public class Servidor extends javax.swing.JFrame {
     private int puerto;
     private servidor server;
     private DefaultListModel listModel ;
+    private DefaultListModel listModelFiles ;
     
     private List<cliente> serversConnectedTo  = new ArrayList<cliente>();
    
@@ -61,14 +62,19 @@ public class Servidor extends javax.swing.JFrame {
         initComponents();
         this.fill_peers();
         this.listModel =  new DefaultListModel();
+        this.listModelFiles =  new DefaultListModel();
         this.servers_connected_to.setModel(listModel);
+        this.files_in_servers.setModel(listModelFiles);
         this.servers_connected_to.setVisible(false);
         this.jLabel2.setVisible(false);
         Servidor aux = this;
+        
+        
+        
+        
         this.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
-            public void windowClosing(java.awt.event.WindowEvent windowEvent) {     
-                System.out.println("prueba");    
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {       
                 for (int i = 0; i < serversConnectedTo.size(); i++) {
                     serversConnectedTo.get(i).logout();
                 }
@@ -102,6 +108,9 @@ public class Servidor extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         servers_connected_to = new javax.swing.JList<>();
         jLabel2 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        files_in_servers = new javax.swing.JList<>();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -135,6 +144,10 @@ public class Servidor extends javax.swing.JFrame {
 
         jLabel2.setText("Server conectados");
 
+        jScrollPane2.setViewportView(files_in_servers);
+
+        jLabel3.setText("Archivos");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -142,9 +155,6 @@ public class Servidor extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -155,10 +165,19 @@ public class Servidor extends javax.swing.JFrame {
                         .addComponent(reload)
                         .addGap(25, 25, 25))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jerror, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(jerror, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(138, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel3)
+                        .addGap(67, 67, 67))))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -172,10 +191,14 @@ public class Servidor extends javax.swing.JFrame {
                 .addGap(45, 45, 45)
                 .addComponent(jerror, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(94, 94, 94))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3))
+                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(127, Short.MAX_VALUE))
         );
 
         pack();
@@ -195,10 +218,17 @@ public class Servidor extends javax.swing.JFrame {
             this.jLabel2.setVisible(true);
             this.servers_connected_to.setVisible(true);
             clienteAux.run();
+            Iterator iterator = clienteAux.listFiles().iterator();
+            while (iterator.hasNext()){
+                 this.listModelFiles.addElement((String)iterator.next());
+            }
             inicializar();
+            
+            
         } catch (Exception e) {
             System.out.println("No es posible conectar");
             jerror.setVisible(true);
+            System.out.println("Excepcion: " + e.getMessage());
         }
         
     }//GEN-LAST:event_connectActionPerformed
@@ -246,9 +276,12 @@ public class Servidor extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton connect;
+    private javax.swing.JList<String> files_in_servers;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel jerror;
     private javax.swing.JComboBox<String> peers;
     private javax.swing.JButton reload;
@@ -281,5 +314,19 @@ public class Servidor extends javax.swing.JFrame {
      */
     public void setServersConnectedTo(List<cliente> serversConnectedTo) {
         this.serversConnectedTo = serversConnectedTo;
+    }
+
+    /**
+     * @return the listModelFiles
+     */
+    public DefaultListModel getListModelFiles() {
+        return listModelFiles;
+    }
+
+    /**
+     * @param listModelFiles the listModelFiles to set
+     */
+    public void setListModelFiles(DefaultListModel listModelFiles) {
+        this.listModelFiles = listModelFiles;
     }
 }

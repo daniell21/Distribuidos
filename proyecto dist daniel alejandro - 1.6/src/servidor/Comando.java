@@ -8,6 +8,7 @@ package servidor;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Iterator;
 import java.util.List;
@@ -23,21 +24,20 @@ public class Comando extends Thread{
     private DataInputStream input;
     private DataOutputStream output;
     private Archivo archivos;
+    private String clientType;
     
-    
-    public Comando(Socket cliente) {
+    public Comando(Socket cliente, String type) {
         this.setCliente(cliente); 
         this.setArchivos(new Archivo(Integer.toString(this.getCliente().getLocalPort())));
+        this.setClientType(type);
         this.getArchivos().crearDirectorio();
     }
 
     @Override
     public void run() {
         super.run(); //To change body of generated methods, choose Tools | Templates.
-      
-        this.sayHello();
+        //this.sayHello();
         this.listenCommand();
-        
     }
     
     
@@ -83,7 +83,7 @@ public class Comando extends Thread{
     
     
     public void listFiles(){
-   
+  
         Archivo archivos = new Archivo(Integer.toString(this.getCliente().getLocalPort()));
         
         List<String> nombres = archivos.listarArchivos();
@@ -105,7 +105,6 @@ public class Comando extends Thread{
         }
     }
     
-
     /**
      * @return the cliente
      */
@@ -161,6 +160,22 @@ public class Comando extends Thread{
     public void setArchivos(Archivo archivos) {
         this.archivos = archivos;
     }
+
+    /**
+     * @return the type
+     */
+    public String getClientType() {
+        return clientType;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setClientType(String clientType) {
+        this.clientType = clientType;
+    }
+
+    
     
     
 }
