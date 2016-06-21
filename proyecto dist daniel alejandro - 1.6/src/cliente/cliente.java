@@ -85,6 +85,36 @@ public class cliente extends Thread{
     }
     
     
+    public String fileContents(String fileName){
+        this.connect();
+        String response = "";
+        try {
+            this.setSalida(new DataOutputStream(this.getSocket().getOutputStream()));
+            this.getSalida().writeUTF("file_content:" + fileName);
+            this.setEntrada(new DataInputStream(this.getSocket().getInputStream()));
+            String answer = this.getEntrada().readUTF();
+            while(!answer.equalsIgnoreCase("done")){
+                System.out.println("Contenido del Archivo: " + answer );
+                response += answer;
+                this.setEntrada(new DataInputStream(this.getSocket().getInputStream()));
+                answer = this.getEntrada().readUTF();
+            }
+            System.out.println("Contenido del Archivo totalmente recibido " + response );
+        } 
+        catch (IOException ex) {
+            System.out.println("Excepcion: " + ex.getMessage());
+            Logger.getLogger(cliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (Exception e) {
+            System.out.println("Excepcion: " + e.getMessage());
+        }
+        finally{
+            this.logout();
+            return response;
+        }
+    }
+    
+    
     public List<String> listFiles(){
         
         this.connect();

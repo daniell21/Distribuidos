@@ -50,8 +50,13 @@ public class Comando extends Thread{
                 if(command.equalsIgnoreCase("listFiles")){
                     this.listFiles();
                 }
-                 if(command.equalsIgnoreCase("listAllFiles")){
+                if(command.equalsIgnoreCase("listAllFiles")){
                     this.listAllFiles();
+                }
+                
+                if(command.contains("file_content:")){
+                    String[] parts = command.split(":");
+                    this.fileContents(parts[1]);
                 }
                 
             }
@@ -65,6 +70,33 @@ public class Comando extends Thread{
             System.out.println("Excepcion: " + e.getMessage());
         }
     }
+    
+    
+    
+    public void fileContents(String fileName){
+  
+        Archivo archivos = new Archivo(Integer.toString(this.getCliente().getLocalPort()));
+        
+        List<String> nombres = archivos.fileContents(fileName);
+        Iterator iterator = nombres.iterator();
+        try {
+            this.setOutput(new DataOutputStream(this.getCliente().getOutputStream()));
+            while(iterator.hasNext()){
+                this.getOutput().writeUTF((String) iterator.next());
+            }
+            this.getOutput().writeUTF("done");
+        } 
+        catch (IOException ex) {
+            System.out.println("Excepcion: " + ex.getMessage());
+            Logger.getLogger(Comando.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        catch (Exception e) {
+            System.out.println("Excepcion: " + e.getMessage());
+        }
+    }
+    
+    
     
     
     public void listFiles(){

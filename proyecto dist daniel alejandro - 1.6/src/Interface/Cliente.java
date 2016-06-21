@@ -65,7 +65,7 @@ public class Cliente extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         server_name = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        file_content = new javax.swing.JTextArea();
         jScrollPane5 = new javax.swing.JScrollPane();
         jTextArea3 = new javax.swing.JTextArea();
         jLabel4 = new javax.swing.JLabel();
@@ -109,9 +109,9 @@ public class Cliente extends javax.swing.JFrame {
 
         server_name.setText("jLabel3");
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane3.setViewportView(jTextArea2);
+        file_content.setColumns(20);
+        file_content.setRows(5);
+        jScrollPane3.setViewportView(file_content);
 
         jTextArea3.setColumns(20);
         jTextArea3.setRows(5);
@@ -138,6 +138,11 @@ public class Cliente extends javax.swing.JFrame {
 
         jLabel7.setText(".txt");
 
+        file_list.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                file_listValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(file_list);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -261,6 +266,14 @@ public class Cliente extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void file_listValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_file_listValueChanged
+       
+        System.out.println("Click in " + this.file_list.getSelectedValue());
+        cliente clienteAux =  new cliente(Integer.parseInt(this.peers.getSelectedItem().toString()));
+        String content = clienteAux.fileContents(this.file_list.getSelectedValue());
+        this.file_content.setText(content);
+    }//GEN-LAST:event_file_listValueChanged
+
     /**
      * @param args the command line arguments
      */
@@ -298,6 +311,7 @@ public class Cliente extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton connect;
+    private javax.swing.JTextArea file_content;
     private javax.swing.JList<String> file_list;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
@@ -311,7 +325,6 @@ public class Cliente extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextArea3;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JComboBox<String> peers;

@@ -1,7 +1,14 @@
 package servidor;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -42,6 +49,33 @@ public class Archivo {
             }
         } catch (Exception e) {
             System.out.println("Excepcion Listar Archivos: " + e.getMessage());
+        }
+        return response;
+    }
+    
+     public List<String> fileContents(String fileName){
+        List response = new ArrayList();
+        boolean found = false;
+        int i = 55000;
+        while (!found && (i<55100)){
+            FileReader fr = null;
+            try {
+                fr = new FileReader("src\\files\\" +Integer.toString(i)+ "\\" +fileName);
+                BufferedReader br = new BufferedReader(fr);
+                String s;
+                while((s = br.readLine()) != null) {
+                    System.out.println(s);
+                    response.add(s);
+                }   
+                found = true;
+                fr.close();
+            } catch (FileNotFoundException ex1) {
+                //Logger.getLogger(Archivo.class.getName()).log(Level.SEVERE, null, ex1);
+                i++;
+            } catch (IOException ex1) {
+                //Logger.getLogger(Archivo.class.getName()).log(Level.SEVERE, null, ex1);
+            } 
+            
         }
         return response;
     }
