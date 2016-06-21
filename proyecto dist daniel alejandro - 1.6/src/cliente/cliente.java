@@ -136,7 +136,25 @@ public class cliente extends Thread{
         }
     }
     
-    
+    public String createFile(String fileName){
+        this.connect();
+        String response = "";
+        try {
+            this.setSalida(new DataOutputStream(this.getSocket().getOutputStream()));
+            this.getSalida().writeUTF("create_file:" + fileName+".txt");
+        } 
+        catch (IOException ex) {
+            System.out.println("Excepcion: " + ex.getMessage());
+            Logger.getLogger(cliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (Exception e) {
+            System.out.println("Excepcion: " + e.getMessage());
+        }
+        finally{
+            this.logout();
+            return response;
+        }
+    }
     
     
     

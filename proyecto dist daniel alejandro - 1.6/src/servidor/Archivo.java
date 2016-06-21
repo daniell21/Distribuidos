@@ -108,6 +108,42 @@ public class Archivo {
         }
         return response;
     }
+    
+    
+    public String CreateFile(String fileName){
+        String response = "not created";
+        try {
+            int i = 55001;
+            int min_files = 1000;
+            int min_files_dir = 55001;
+            while (i<55100){
+                File folder = new File("src\\files\\" +Integer.toString(i));
+                File[] listOfFiles = folder.listFiles();
+                if (folder.isDirectory()){
+                    if (listOfFiles.length < min_files){
+                        min_files = listOfFiles.length;
+                        min_files_dir = i;
+                    }
+                }
+                i++;
+            }
+            System.out.println("src\\files\\" +Integer.toString(min_files_dir)+ "\\" +fileName);
+            
+            FileWriter fw;
+            fw = new FileWriter("src\\files\\" +Integer.toString(min_files_dir)+ "\\" +fileName);
+            fw.write("");
+            fw.close();
+            response = "file created";
+           
+        } catch (IOException ex) {
+            Logger.getLogger(Archivo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (Exception ex) {
+            Logger.getLogger(Archivo.class.getName()).log(Level.SEVERE, null, ex);
+            //System.out.println("Excepcion crear Archivos: " + e.getMessage());
+        }
+        return response;
+    }
 
     /**
      * @return the directorio

@@ -59,9 +59,14 @@ public class Comando extends Thread{
                     this.fileContents(parts[1]);
                 }
                 
-                 if(command.contains("update_file_content:")){
+                if(command.contains("update_file_content:")){
                     String[] parts = command.split(":");
                     this.updateFileContents(parts[1], parts[2]);
+                }
+                
+                if(command.contains("create_file:")){
+                    String[] parts = command.split(":");
+                    this.createFile(parts[1]);
                 }
                 
             }
@@ -107,6 +112,11 @@ public class Comando extends Thread{
         String response = archivos.UpdatefileContents(fileName, fileContent);
     }
     
+    
+     public void createFile(String fileName){
+        Archivo archivos = new Archivo(Integer.toString(this.getCliente().getLocalPort()));
+        String response = archivos.CreateFile(fileName);
+    }
     
     public void listFiles(){
   
