@@ -68,6 +68,10 @@ public class Comando extends Thread{
                     String[] parts = command.split(":");
                     this.createFile(parts[1]);
                 }
+                if(command.contains("delete_file:")){
+                    String[] parts = command.split(":");
+                    this.deleteFile(parts[1]);
+                }
                 
             }
         } 
@@ -116,6 +120,12 @@ public class Comando extends Thread{
      public void createFile(String fileName){
         Archivo archivos = new Archivo(Integer.toString(this.getCliente().getLocalPort()));
         String response = archivos.CreateFile(fileName);
+    }
+     
+     
+    public void deleteFile(String fileName){
+        Archivo archivos = new Archivo(Integer.toString(this.getCliente().getLocalPort()));
+        String response = archivos.deleteFile(fileName);
     }
     
     public void listFiles(){

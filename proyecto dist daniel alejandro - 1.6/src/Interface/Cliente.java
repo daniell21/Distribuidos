@@ -77,6 +77,7 @@ public class Cliente extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         file_list = new javax.swing.JList<>();
         update_file = new javax.swing.JButton();
+        delete_file = new javax.swing.JButton();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -153,6 +154,13 @@ public class Cliente extends javax.swing.JFrame {
             }
         });
 
+        delete_file.setText("Eliminar");
+        delete_file.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                delete_fileActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -202,7 +210,9 @@ public class Cliente extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(87, 87, 87)
                 .addComponent(update_file)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(delete_file)
+                .addGap(81, 81, 81))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -228,7 +238,9 @@ public class Cliente extends javax.swing.JFrame {
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(update_file)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(update_file)
+                    .addComponent(delete_file))
                 .addGap(17, 17, 17)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -301,6 +313,14 @@ public class Cliente extends javax.swing.JFrame {
        
     }//GEN-LAST:event_update_fileActionPerformed
 
+    private void delete_fileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delete_fileActionPerformed
+        // TODO add your handling code here:
+        
+        cliente clienteAux =  new cliente(Integer.parseInt(this.peers.getSelectedItem().toString()));
+        clienteAux.deleteFile(this.file_list.getSelectedValue());
+       
+    }//GEN-LAST:event_delete_fileActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -338,6 +358,7 @@ public class Cliente extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton connect;
+    private javax.swing.JButton delete_file;
     private javax.swing.JTextArea file_content;
     private javax.swing.JTextArea file_content_edit;
     private javax.swing.JList<String> file_list;

@@ -145,6 +145,35 @@ public class Archivo {
         return response;
     }
 
+    
+    
+    
+    public String deleteFile(String fileName){
+        String response = "not found";
+        boolean found = false;
+        int i = 55000;
+        while (!found && (i<55100)){
+            FileReader fr = null;
+            try {
+                fr = new FileReader("src\\files\\" +Integer.toString(i)+ "\\" +fileName);
+                fr.close();
+                File file = new File("src\\files\\" +Integer.toString(i)+ "\\" +fileName);
+                file.delete();
+                found = true;
+                response = "file deleted";
+            } catch (FileNotFoundException ex1) {
+                //Logger.getLogger(Archivo.class.getName()).log(Level.SEVERE, null, ex1);
+                i++;
+            } catch (IOException ex1) {
+                //Logger.getLogger(Archivo.class.getName()).log(Level.SEVERE, null, ex1);
+            } 
+            
+        }
+        return response;
+    }
+    
+    
+    
     /**
      * @return the directorio
      */
